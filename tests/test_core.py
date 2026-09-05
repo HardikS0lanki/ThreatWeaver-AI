@@ -7,7 +7,7 @@ from pathlib import Path
 ROOT = Path(__file__).parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
-from threatweaver.core import load_policy, validate  # noqa: E402
+from threatweaver.core import load_policy, render_markdown, validate  # noqa: E402
 
 
 class ValidationTests(unittest.TestCase):
@@ -33,6 +33,25 @@ class ValidationTests(unittest.TestCase):
         model = copy.deepcopy(self.model)
         model["threats"][0]["component_refs"] = ["C-999"]
         self.assertTrue(any("unknown component" in error for error in validate(model, self.policy)))
+
+    def test_requires_every_asvs_chapter(self):
+        model = copy.deepcopy(self.model)
+        model["asvs_coverage"].pop()
+        self.assertTrue(any("missing ASVS coverage chapter: V17" in error for error in validate(model, self.policy)))
+
+    def test_rejects_invalid_framework_references(self):
+        model = copy.deepcopy(self.model)
+        model["threats"][0]["asvs_refs"] = ["8.4.1"]
+        model["threats"][0]["capec_ids"] = ["CAPEC-guessed"]
+        errors = validate(model, self.policy)
+        self.assertTrue(any("invalid ASVS" in error for error in errors))
+        self.assertTrue(any("invalid CAPEC" in error for error in errors))
+
+    def test_report_has_mandatory_register_and_coverage(self):
+        report = render_markdown(self.model)
+        for heading in ("Existing Security Controls", "Impact", "Security Recommendations", "Severity", "Status", "ASVS 5.0", "CAPEC", "Additional Details"):
+            self.assertIn(heading, report)
+        self.assertIn("## OWASP ASVS 5.0 coverage", report)
 
 
 if __name__ == "__main__":

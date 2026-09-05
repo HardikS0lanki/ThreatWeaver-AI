@@ -11,7 +11,7 @@ ThreatWeaver AI turns architecture diagrams, repositories, Jira issues, Confluen
 - Evidence-first: findings cite source records instead of presenting guesses as facts.
 - Prompt-injection aware: retrieved documents are untrusted data, never agent instructions.
 - Broad coverage: application, API, SaaS, cloud, Kubernetes, AI/LLM, RAG, and agentic systems.
-- Conditional frameworks: STRIDE always; LINDDUN, STRIDE-LM, MAESTRO, OWASP, cloud, and compliance mappings only when relevant.
+- Standards-aware: STRIDE threat discovery plus complete OWASP ASVS 5.0 chapter coverage, OWASP Proactive Controls 2024, MITRE CAPEC 3.9, and applicable NIST references.
 - Human governed: no Jira, Confluence, code, infrastructure, or ticket mutation without explicit approval.
 - Deterministically checked: schemas and Python validators reject incomplete or inconsistent outputs.
 
@@ -90,9 +90,12 @@ The canonical JSON model records:
 - system scope, assets, components, trust boundaries, and flows;
 - evidence references and explicit assumptions;
 - threats with scenario, affected assets/components, controls, recommendations, likelihood, impact, severity, confidence, and framework mappings;
+- exactly one applicability row for every OWASP ASVS 5.0 chapter (V1–V17), using versioned requirement IDs;
 - open questions and limitations.
 
 Run the validator before accepting or publishing any generated report.
+
+ThreatWeaver keeps these frameworks distinct: STRIDE identifies threats, ASVS verifies control coverage, Proactive Controls shape preventive recommendations, and CAPEC describes applicable attack patterns. It never treats a checklist mapping as proof of compliance and never invents findings to fill a category. See the primary sources for [OWASP ASVS 5.0](https://github.com/OWASP/ASVS/tree/v5.0.0/5.0), [OWASP Top 10 Proactive Controls](https://top10proactive.owasp.org/), and [MITRE CAPEC](https://capec.mitre.org/data/index.html).
 
 ## Responsible use
 

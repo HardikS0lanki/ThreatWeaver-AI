@@ -1,0 +1,27 @@
+{
+  "asvs": {
+    "version": "5.0.0",
+    "reference_format": "v5.0.0-<chapter>.<section>.<requirement>",
+    "chapters": {
+      "V1": "Encoding and Sanitization", "V2": "Validation and Business Logic",
+      "V3": "Web Frontend Security", "V4": "API and Web Service", "V5": "File Handling",
+      "V6": "Authentication", "V7": "Session Management", "V8": "Authorization",
+      "V9": "Self-contained Tokens", "V10": "OAuth and OIDC", "V11": "Cryptography",
+      "V12": "Secure Communication", "V13": "Configuration", "V14": "Data Protection",
+      "V15": "Secure Coding and Architecture", "V16": "Security Logging and Error Handling",
+      "V17": "WebRTC"
+    }
+  },
+  "owasp_proactive_controls": {
+    "edition": "2024",
+    "controls": {
+      "C1": "Implement Access Control", "C2": "Use Cryptography to Protect Data",
+      "C3": "Validate all Input & Handle Exceptions", "C4": "Address Security from the Start",
+      "C5": "Secure By Default Configurations", "C6": "Keep your Components Secure",
+      "C7": "Secure Digital Identities", "C8": "Leverage Browser Security Features",
+      "C9": "Implement Security Logging and Monitoring", "C10": "Stop Server Side Request Forgery"
+    }
+  },
+  "capec": {"version": "3.9", "reference_format": "CAPEC-<id>"},
+  "nist": {"references": ["NIST CSF 2.0", "NIST SP 800-53 Rev. 5"]}
+}

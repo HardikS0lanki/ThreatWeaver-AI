@@ -3,7 +3,7 @@
   "$id": "https://hardiks0lanki.github.io/threatweaver/schemas/threat-model.schema.json",
   "title": "ThreatWeaver threat model",
   "type": "object",
-  "required": ["schema_version", "system", "evidence", "assumptions", "assets", "components", "trust_boundaries", "data_flows", "threats", "open_questions", "limitations", "human_review"],
+  "required": ["schema_version", "system", "evidence", "assumptions", "assets", "components", "trust_boundaries", "data_flows", "threats", "asvs_coverage", "open_questions", "limitations", "human_review"],
   "properties": {
     "schema_version": {"const": "1.0"},
     "system": {
@@ -22,6 +22,7 @@
     "trust_boundaries": {"type": "array", "items": {"$ref": "#/$defs/namedElement"}},
     "data_flows": {"type": "array", "items": {"type": "object", "required": ["id", "name", "source", "destination", "data", "evidence_refs"], "properties": {"id": {"type": "string"}, "name": {"type": "string"}, "source": {"type": "string"}, "destination": {"type": "string"}, "data": {"type": "array", "items": {"type": "string"}}, "protocol": {"type": "string"}, "evidence_refs": {"type": "array", "items": {"type": "string"}, "minItems": 1}}, "additionalProperties": true}},
     "threats": {"type": "array", "items": {"$ref": "#/$defs/threat"}},
+    "asvs_coverage": {"type": "array", "minItems": 17, "maxItems": 17, "items": {"$ref": "#/$defs/asvsCoverage"}},
     "open_questions": {"type": "array", "items": {"type": "string"}},
     "limitations": {"type": "array", "items": {"type": "string"}},
     "human_review": {"type": "object", "required": ["status"], "properties": {"status": {"enum": ["required", "in-progress", "approved", "rejected"]}, "reviewer": {"type": "string"}, "reviewed_at": {"type": "string"}}, "additionalProperties": false}
@@ -29,13 +30,24 @@
   "$defs": {
     "namedElement": {"type": "object", "required": ["id", "name", "description", "evidence_refs"], "properties": {"id": {"type": "string"}, "name": {"type": "string", "minLength": 1}, "description": {"type": "string", "minLength": 1}, "evidence_refs": {"type": "array", "items": {"type": "string"}, "minItems": 1}}, "additionalProperties": true},
     "control": {"type": "object", "required": ["description", "status"], "properties": {"description": {"type": "string", "minLength": 1}, "status": {"enum": ["observed", "reported", "inferred", "unverified"]}}, "additionalProperties": false},
-    "threat": {"type": "object", "required": ["id", "category", "title", "scenario", "component_refs", "asset_refs", "evidence_refs", "existing_controls", "recommendations", "likelihood", "impact", "severity", "confidence", "rationale"], "properties": {
+    "asvsCoverage": {"type": "object", "required": ["chapter", "title", "applicability", "requirement_refs", "threat_refs", "notes"], "properties": {
+      "chapter": {"enum": ["V1", "V2", "V3", "V4", "V5", "V6", "V7", "V8", "V9", "V10", "V11", "V12", "V13", "V14", "V15", "V16", "V17"]},
+      "title": {"type": "string", "minLength": 1}, "applicability": {"enum": ["applicable", "not-applicable", "not-assessed"]},
+      "requirement_refs": {"type": "array", "items": {"type": "string", "pattern": "^v5\\.0\\.0-(?:[1-9]|1[0-7])\\.[0-9]+\\.[0-9]+$"}},
+      "threat_refs": {"type": "array", "items": {"type": "string", "pattern": "^T-[0-9]{3,}$"}}, "notes": {"type": "string", "minLength": 10}
+    }, "additionalProperties": false},
+    "threat": {"type": "object", "required": ["id", "category", "title", "scenario", "component_refs", "asset_refs", "evidence_refs", "existing_controls", "recommendations", "likelihood", "impact", "impact_description", "severity", "status", "confidence", "rationale", "asvs_refs", "proactive_controls", "capec_ids", "nist_refs", "mapping_rationale"], "properties": {
       "id": {"type": "string", "pattern": "^T-[0-9]{3,}$"}, "category": {"enum": ["spoofing", "tampering", "repudiation", "information-disclosure", "denial-of-service", "elevation-of-privilege", "privacy", "ai-llm", "agentic", "supply-chain", "other"]},
       "title": {"type": "string", "minLength": 1}, "scenario": {"type": "string", "minLength": 20},
       "component_refs": {"type": "array", "items": {"type": "string"}, "minItems": 1}, "asset_refs": {"type": "array", "items": {"type": "string"}, "minItems": 1}, "evidence_refs": {"type": "array", "items": {"type": "string"}, "minItems": 1},
       "existing_controls": {"type": "array", "items": {"$ref": "#/$defs/control"}}, "recommendations": {"type": "array", "items": {"type": "string", "minLength": 10}, "minItems": 1},
-      "likelihood": {"enum": ["very-low", "low", "medium", "high", "critical"]}, "impact": {"enum": ["very-low", "low", "medium", "high", "critical"]}, "severity": {"enum": ["informational", "low", "medium", "high", "critical"]},
-      "confidence": {"enum": ["low", "medium", "high"]}, "rationale": {"type": "string", "minLength": 10}, "framework_mappings": {"type": "array", "items": {"type": "string"}}
+      "likelihood": {"enum": ["very-low", "low", "medium", "high", "critical"]}, "impact": {"enum": ["very-low", "low", "medium", "high", "critical"]}, "impact_description": {"type": "string", "minLength": 10}, "severity": {"enum": ["informational", "low", "medium", "high", "critical"]}, "status": {"enum": ["open", "accepted", "mitigating", "mitigated", "closed", "false-positive"]},
+      "confidence": {"enum": ["low", "medium", "high"]}, "rationale": {"type": "string", "minLength": 10},
+      "asvs_refs": {"type": "array", "items": {"type": "string", "pattern": "^v5\\.0\\.0-(?:[1-9]|1[0-7])\\.[0-9]+\\.[0-9]+$"}},
+      "proactive_controls": {"type": "array", "items": {"type": "string", "pattern": "^C(?:[1-9]|10)$"}},
+      "capec_ids": {"type": "array", "items": {"type": "string", "pattern": "^CAPEC-[1-9][0-9]*$"}},
+      "nist_refs": {"type": "array", "items": {"type": "string", "minLength": 3}}, "mapping_rationale": {"type": "string", "minLength": 10},
+      "framework_mappings": {"type": "array", "items": {"type": "string"}}
     }, "additionalProperties": false}
   },
   "additionalProperties": false

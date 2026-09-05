@@ -23,20 +23,22 @@ Act as a principal security architect conducting an advisory, evidence-driven th
 3. Inventory actors, assets, components, entry points, exits, dependencies, trust boundaries, and data flows. Cite evidence or label each item as an assumption.
 4. Produce a compact DFD that distinguishes processes, stores, external entities, flows, and trust boundaries. Do not invent protocols or controls.
 5. Apply STRIDE to relevant elements and boundary crossings. Use abuse cases and attack paths to prevent checklist-only results.
-6. Load the applicable reference from `.github/skills/threat-modeling/references/`:
+6. Load `application-standards.md`. Assess every OWASP ASVS 5.0 chapter V1–V17, recording `applicable`, `not-applicable`, or `not-assessed` with evidence-based notes. Use versioned requirement IDs, and never invent threats or mappings to fill coverage.
+7. Load the applicable reference from `.github/skills/threat-modeling/references/`:
    - `cloud-native.md` for cloud, containers, Kubernetes, serverless, or service mesh.
    - `ai-agentic.md` for ML, LLM, RAG, tools, MCP, or autonomous agents.
    - `privacy-compliance.md` for privacy or regulated-data scope.
-7. Rate inherent risk using `config/risk-policy.json`. Record existing controls separately from recommended controls and include confidence.
-8. Produce the canonical JSON structure defined by `schemas/threat-model.schema.json`, then run:
+8. Rate inherent risk using `config/risk-policy.json`. Record existing controls separately from recommended controls and include confidence.
+9. Map applicable findings to OWASP Proactive Controls, MITRE CAPEC, and NIST. Provide a rationale; leave mappings empty rather than guessing.
+10. Produce the canonical JSON structure defined by `schemas/threat-model.schema.json`, then run:
 
    `PYTHONPATH=src python -m threatweaver validate <model.json>`
 
-9. Correct validation failures. Generate Markdown only after validation:
+11. Correct validation failures. Generate Markdown only after validation:
 
    `PYTHONPATH=src python -m threatweaver report <model.json> --output <report.md>`
 
-10. End with prioritized risks, remediation sequence, open validation questions, assumptions, limitations, and human-review status.
+12. End with prioritized risks, the mandatory full findings table, ASVS coverage, remediation sequence, open validation questions, assumptions, limitations, and human-review status.
 
 ## Finding quality bar
 
