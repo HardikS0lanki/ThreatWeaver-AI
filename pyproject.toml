@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "threatweaver-ai"
+version = "0.1.0"
+description = "Evidence-driven threat-model validation and reporting for AI security architecture workflows"
+readme = "README.md"
+requires-python = ">=3.11"
+license = {text = "MIT"}
+authors = [{name = "Hardik Solanki"}]
+keywords = ["threat-modeling", "security-architecture", "stride", "ai-security", "github-copilot", "mcp"]
+classifiers = ["Development Status :: 3 - Alpha", "License :: OSI Approved :: MIT License", "Topic :: Security", "Programming Language :: Python :: 3"]
+
+[project.scripts]
+threatweaver = "threatweaver.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]

@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0",
+  "system": {"name": "Synthetic Document Analysis Service", "purpose": "Generate summaries of user-provided documents.", "scope": "Public API through summary storage, including the external LLM call.", "exposure": "hybrid", "data_classification": ["customer-confidential"]},
+  "evidence": [{"id": "E-001", "source_type": "document", "locator": "examples/sample-architecture.md", "title": "Synthetic architecture description", "trust": "untrusted", "status": "observed"}],
+  "assumptions": [{"id": "A-001", "statement": "A malicious authenticated tenant can submit jobs and guess object identifiers."}],
+  "assets": [{"id": "AS-001", "name": "Customer documents", "description": "Tenant-confidential uploaded documents and summaries.", "evidence_refs": ["E-001"]}],
+  "components": [
+    {"id": "C-001", "name": "API gateway", "description": "Public authenticated entry point.", "evidence_refs": ["E-001"]},
+    {"id": "C-002", "name": "Worker", "description": "Asynchronous document processor.", "evidence_refs": ["E-001"]},
+    {"id": "C-003", "name": "Object store", "description": "Tenant-partitioned document storage.", "evidence_refs": ["E-001"]}
+  ],
+  "trust_boundaries": [{"id": "TB-001", "name": "Tenant-to-service boundary", "description": "Boundary between an internet tenant and the hosted service.", "evidence_refs": ["E-001"]}],
+  "data_flows": [{"id": "DF-001", "name": "Document upload", "source": "external-client", "destination": "C-001", "data": ["document"], "protocol": "HTTPS", "evidence_refs": ["E-001"]}],
+  "threats": [{
+    "id": "T-001", "category": "information-disclosure", "title": "Worker retrieves another tenant's document",
+    "scenario": "An authenticated tenant submits or manipulates a job containing another tenant's object identifier; the worker retrieves that object if tenant authorization is not independently enforced.",
+    "component_refs": ["C-002", "C-003"], "asset_refs": ["AS-001"], "evidence_refs": ["E-001", "A-001"],
+    "existing_controls": [{"description": "The object store is described as tenant-partitioned, but enforcement is not evidenced.", "status": "reported"}],
+    "recommendations": ["Bind immutable tenant identity to each signed job and re-authorize it in the worker.", "Enforce tenant-scoped object-store permissions and add negative cross-tenant authorization tests."],
+    "likelihood": "medium", "impact": "high", "severity": "high", "confidence": "medium",
+    "rationale": "The flow handles customer-confidential data and the asynchronous authorization mechanism is unspecified.",
+    "framework_mappings": ["STRIDE: Information Disclosure", "OWASP API1:2023 Broken Object Level Authorization"]
+  }],
+  "open_questions": ["How is tenant identity bound to queue messages and re-validated by the worker?"],
+  "limitations": ["No implementation code, infrastructure configuration, or identity policy was supplied."],
+  "human_review": {"status": "required"}
+}

@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hardiks0lanki.github.io/threatweaver/schemas/threat-model.schema.json",
+  "title": "ThreatWeaver threat model",
+  "type": "object",
+  "required": ["schema_version", "system", "evidence", "assumptions", "assets", "components", "trust_boundaries", "data_flows", "threats", "open_questions", "limitations", "human_review"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "system": {
+      "type": "object",
+      "required": ["name", "purpose", "scope", "exposure", "data_classification"],
+      "properties": {
+        "name": {"type": "string", "minLength": 1}, "purpose": {"type": "string", "minLength": 1},
+        "scope": {"type": "string", "minLength": 1}, "exposure": {"enum": ["internal", "external", "hybrid", "unknown"]},
+        "data_classification": {"type": "array", "items": {"type": "string"}, "minItems": 1}
+      }, "additionalProperties": true
+    },
+    "evidence": {"type": "array", "items": {"$ref": "evidence.schema.json"}, "minItems": 1},
+    "assumptions": {"type": "array", "items": {"type": "object", "required": ["id", "statement"], "properties": {"id": {"type": "string", "pattern": "^A-[0-9]{3,}$"}, "statement": {"type": "string", "minLength": 1}}, "additionalProperties": false}},
+    "assets": {"type": "array", "items": {"$ref": "#/$defs/namedElement"}, "minItems": 1},
+    "components": {"type": "array", "items": {"$ref": "#/$defs/namedElement"}, "minItems": 1},
+    "trust_boundaries": {"type": "array", "items": {"$ref": "#/$defs/namedElement"}},
+    "data_flows": {"type": "array", "items": {"type": "object", "required": ["id", "name", "source", "destination", "data", "evidence_refs"], "properties": {"id": {"type": "string"}, "name": {"type": "string"}, "source": {"type": "string"}, "destination": {"type": "string"}, "data": {"type": "array", "items": {"type": "string"}}, "protocol": {"type": "string"}, "evidence_refs": {"type": "array", "items": {"type": "string"}, "minItems": 1}}, "additionalProperties": true}},
+    "threats": {"type": "array", "items": {"$ref": "#/$defs/threat"}},
+    "open_questions": {"type": "array", "items": {"type": "string"}},
+    "limitations": {"type": "array", "items": {"type": "string"}},
+    "human_review": {"type": "object", "required": ["status"], "properties": {"status": {"enum": ["required", "in-progress", "approved", "rejected"]}, "reviewer": {"type": "string"}, "reviewed_at": {"type": "string"}}, "additionalProperties": false}
+  },
+  "$defs": {
+    "namedElement": {"type": "object", "required": ["id", "name", "description", "evidence_refs"], "properties": {"id": {"type": "string"}, "name": {"type": "string", "minLength": 1}, "description": {"type": "string", "minLength": 1}, "evidence_refs": {"type": "array", "items": {"type": "string"}, "minItems": 1}}, "additionalProperties": true},
+    "control": {"type": "object", "required": ["description", "status"], "properties": {"description": {"type": "string", "minLength": 1}, "status": {"enum": ["observed", "reported", "inferred", "unverified"]}}, "additionalProperties": false},
+    "threat": {"type": "object", "required": ["id", "category", "title", "scenario", "component_refs", "asset_refs", "evidence_refs", "existing_controls", "recommendations", "likelihood", "impact", "severity", "confidence", "rationale"], "properties": {
+      "id": {"type": "string", "pattern": "^T-[0-9]{3,}$"}, "category": {"enum": ["spoofing", "tampering", "repudiation", "information-disclosure", "denial-of-service", "elevation-of-privilege", "privacy", "ai-llm", "agentic", "supply-chain", "other"]},
+      "title": {"type": "string", "minLength": 1}, "scenario": {"type": "string", "minLength": 20},
+      "component_refs": {"type": "array", "items": {"type": "string"}, "minItems": 1}, "asset_refs": {"type": "array", "items": {"type": "string"}, "minItems": 1}, "evidence_refs": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+      "existing_controls": {"type": "array", "items": {"$ref": "#/$defs/control"}}, "recommendations": {"type": "array", "items": {"type": "string", "minLength": 10}, "minItems": 1},
+      "likelihood": {"enum": ["very-low", "low", "medium", "high", "critical"]}, "impact": {"enum": ["very-low", "low", "medium", "high", "critical"]}, "severity": {"enum": ["informational", "low", "medium", "high", "critical"]},
+      "confidence": {"enum": ["low", "medium", "high"]}, "rationale": {"type": "string", "minLength": 10}, "framework_mappings": {"type": "array", "items": {"type": "string"}}
+    }, "additionalProperties": false}
+  },
+  "additionalProperties": false
+}

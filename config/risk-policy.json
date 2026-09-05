@@ -1,0 +1,11 @@
+{
+  "version": "1.0",
+  "levels": ["very-low", "low", "medium", "high", "critical"],
+  "matrix": {
+    "very-low": {"very-low": "informational", "low": "low", "medium": "low", "high": "medium", "critical": "medium"},
+    "low": {"very-low": "low", "low": "low", "medium": "medium", "high": "medium", "critical": "high"},
+    "medium": {"very-low": "low", "low": "medium", "medium": "medium", "high": "high", "critical": "high"},
+    "high": {"very-low": "medium", "low": "medium", "medium": "high", "high": "high", "critical": "critical"},
+    "critical": {"very-low": "medium", "low": "high", "medium": "high", "high": "critical", "critical": "critical"}
+  }
+}

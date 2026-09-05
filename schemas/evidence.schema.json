@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hardiks0lanki.github.io/threatweaver/schemas/evidence.schema.json",
+  "title": "ThreatWeaver evidence record",
+  "type": "object",
+  "required": ["id", "source_type", "locator", "title", "trust", "status"],
+  "properties": {
+    "id": {"type": "string", "pattern": "^E-[0-9]{3,}$"},
+    "source_type": {"enum": ["jira", "confluence", "diagram", "code", "config", "document", "interview", "user-input", "other"]},
+    "locator": {"type": "string", "minLength": 1},
+    "title": {"type": "string", "minLength": 1},
+    "trust": {"enum": ["untrusted", "partially-trusted", "trusted"]},
+    "status": {"enum": ["observed", "reported", "inferred", "unverified"]},
+    "digest": {"type": "string"},
+    "retrieved_at": {"type": "string"}
+  },
+  "additionalProperties": false
+}

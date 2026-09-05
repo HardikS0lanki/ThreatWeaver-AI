@@ -1,0 +1,22 @@
+{
+  "servers": {
+    "jira-readonly": {
+      "type": "stdio-or-http-defined-by-your-provider",
+      "command": "REPLACE_WITH_APPROVED_MCP_SERVER",
+      "args": [],
+      "env": {
+        "JIRA_BASE_URL": "${input:jira-base-url}",
+        "JIRA_TOKEN": "${input:jira-readonly-token}"
+      }
+    },
+    "confluence-readonly": {
+      "type": "stdio-or-http-defined-by-your-provider",
+      "command": "REPLACE_WITH_APPROVED_MCP_SERVER",
+      "args": [],
+      "env": {
+        "CONFLUENCE_BASE_URL": "${input:confluence-base-url}",
+        "CONFLUENCE_TOKEN": "${input:confluence-readonly-token}"
+      }
+    }
+  }
+}
